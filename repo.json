@@ -1,0 +1,50 @@
+[
+	{
+		"link":"http://us.archive.ubuntu.com/ubuntu/",
+		"repo_name":"xenial",
+		"os_name":"ubuntu",
+		"os_version" : "16.04"
+	},
+	{
+		"link":"http://us.archive.ubuntu.com/ubuntu/",
+		"repo_name":"xenial-updates",
+		"os_name":"ubuntu",
+		"os_version" : "16.04"
+	},
+	{
+		"link":"http://us.archive.ubuntu.com/ubuntu/",
+		"repo_name":"trusty-updates",
+		"os_name" : "ubuntu",
+		"os_version" : "14.04"
+	},
+	{
+		"link":"http://us.archive.ubuntu.com/ubuntu/",
+		"repo_name":"trusty",
+		"os_name" : "ubuntu",
+		"os_version" : "14.04"
+	},
+	{
+		"link":"http://us.archive.ubuntu.com/ubuntu/",
+		"repo_name":"bionic",
+		"os_name" : "ubuntu",
+		"os_version" : "18.04"
+	},
+	{
+		"link":"http://us.archive.ubuntu.com/ubuntu/",
+		"repo_name":"bionic-updates",
+		"os_name" : "ubuntu",
+		"os_version" : "18.04"
+	},
+	{
+		"link":"http://old-releases.ubuntu.com/ubuntu/",
+		"repo_name":"artful",
+		"os_name" : "ubuntu",
+		"os_version" : "17.10"
+	},
+	{
+		"link":"http://old-releases.ubuntu.com/ubuntu/",
+		"repo_name":"bionic-updates",
+		"os_name" : "ubuntu",
+		"os_version" : "17.10"
+	},
+]

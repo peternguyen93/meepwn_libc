@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>Libc Collection</title>
+		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" </link> -->
+		<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.10.1.min.js') }}"></script>
+	</head>
+	<body>
+		<form method="POST" id="query" onsubmit="return get_libc_rop();">
+			<p>Leak address : </p><input type="text" name="leak_addr" placeholder="0x7ffff7a84e30"/>
+			<p>Leak function name : </p><input id="func_name" type="text" name="func_name" placeholder="puts"/>
+			<input id="submit_button" type="submit" name="libc_rop" value = "Get Libc ROP"/>
+		</form>
+		<p>Gadget : </p><input id="match_gadget" type="text" name="gadget" placeholder="pop rdi ; ret"/>
+		<p id="result"><table id="result_table"><tbody></tbody></table></p>
+		<script type="text/javascript">
+			function dec2hex(num)
+			{
+				return '0x' + num.toString(16);
+			}
+
+			function get_libc_rop()
+			{
+				$("result_table tr").remove();
+				var url = "/find_libc_rop_gadget"; // the script where you handle the form input.
+				$.ajax({
+					type: "POST",
+					url: url,
+					data: $("#query").serialize(), // serializes the form's elements.
+					success: function(data)
+					{
+						if(data['gadgets'].length > 0){
+							var gadgets = data['gadgets'];
+							var match_gadget = $("#match_gadget").val();
+							var func_name = $('#func_name').val()
+
+							$("#result").append("<p><b>Base Address</b> : " + dec2hex(data['base_addr']) + "</p>");
+							$("#result").append("<p><b>Offset " + func_name + ": " + dec2hex(data['offset']) + "</b></p>")
+							for(var i = 0; i < gadgets.length; i++){
+								if(gadgets[i]["gadget"].indexOf(match_gadget) != -1){
+									$("#result_table > tbody:last").append('<tr><td>'+ dec2hex(gadgets[i]['vaddr']) + '</td><td>' + gadgets[i]['gadget'] + '</td></tr>');
+								}
+							}
+						}else{
+							$("#result").text("Your request not found");
+						}
+					}
+				});
+				return false;
+			}
+		</script>
+	</body>
+</html>

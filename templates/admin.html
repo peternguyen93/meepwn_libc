@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>Libc Collection - Admin Page</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}"</link>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"</link>
+		<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.10.1.min.js') }}"></script>
+	</head>
+	<body>
+		<div id="banner">
+			<h1> Admin Page </h1>
+		</div>
+
+		<div id="gen_user_key">
+			<form method="POST" id="genKey_query" onsubmit="return genKey();">
+				<p>Name: </p><input id="name_input" type="text" name="name"/>
+				<input id="submit_button" type="submit" name="genkey" value = "Gen Key"/>
+			</form>
+		</div>
+
+		<div id="user_list">
+			<table>
+				<thead>
+					<tr>
+						<th>Users</th>
+						<th>Key (Limited Length)</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for rec in user_list %}
+					<tr>
+						<td id="user_{{ loop.index0 }}">{{ rec.name }}</td>
+						<td>{{ rec.key }}</td>
+						<td><input id="del_button" type="button" value="Remove" onclick="removeKey({{ loop.index0 }});"></td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+
+		<script type="text/javascript">
+			function genKey()
+			{
+				var url = '/admin_add_key';
+				$.ajax({
+					type: "POST",
+					url: url,
+					data: $("#genKey_query").serialize(), // serializes the form's elements.
+					success: function(data)
+					{
+						if(data['error']){
+							alert(data['msg']);
+						}else{
+							prompt("Your key:",data['key']);
+						}
+					}
+				});
+
+				return false;
+			}
+
+			function removeKey(idx)
+			{
+				var url = '/admin_del_key';
+				$.ajax({
+					type: "POST",
+					url: url,
+					data: "user_name="+$("#user_"+idx.toString()).text(),
+					success: function(data)
+					{
+						alert(data['msg']);
+						window.location = window.location.href;
+					}
+				});
+
+				return false;
+			}
+		</script>
+
+	</body>
+</html>

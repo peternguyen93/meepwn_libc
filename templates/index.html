@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>Libc Collection</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" </link>
+		<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.10.1.min.js') }}"></script>
+	</head>
+	<body>
+		<form method="POST" id="query" onsubmit="return getOffset();">
+			<p>Leak address : </p><input id="leak_addr" type="text" name="func_addr" placeholder="0x7ffff7a84e30"/>
+			<p>Function name : </p><input type="text" name="func_name" placeholder="puts"/>
+			<p>Function name 2 : </p><input type="text" name="func2_name" placeholder="system"/>
+			<input id="submit_button" type="submit" name="get_offset" value = "Get Offset"/>
+			<p id="result"></p>
+		</form>
+		<script type="text/javascript">
+			function getOffset()
+			{
+				var url = "/libc_find"; // the script where you handle the form input.
+				$.ajax({
+					type: "POST",
+					url: url,
+					data: $("#query").serialize(), // serializes the form's elements.
+					success: function(data)
+					{
+						libc_base_addr = 0;
+						if(data['offset'] != 0){
+
+							libc_base_addr = parseInt($('#leak_addr').val()) - data['offset2'];
+
+							$("#result").append(
+								"<p>Libc base address : 0x" + libc_base_addr.toString(16) + "</p>" + 
+								"<p>Your request offset : " + data['offset'] + "</p>" + 
+								"<p>OS name : " + data['info']['os_name'] +
+								" -  Version : " + data['info']['os_version'] +  "</p>" + 
+								"<p>Link Download : <a href=\"" + data['info']['link_down'] + "\">here</a></p>"
+							);
+							
+						}else{
+							$("#result").text("Your request not found");
+						}
+					}
+				});
+				return false;
+			}
+		</script>
+	</body>
+</html>
